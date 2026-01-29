@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Fechamento de Produção - Turno</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+    .box {
+      background: #fff;
+      padding: 20px;
+      max-width: 450px;
+      margin: auto;
+      border-radius: 8px;
+    }
+    h2 {
+      text-align: center;
+    }
+    label {
+      margin-top: 10px;
+      display: block;
+    }
+    input, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 15px;
+      background: #1976d2;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .resultado {
+      margin-top: 15px;
+      background: #e3f2fd;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Fechamento do Turno</h2>
+
+  <label>Produção da máquina</label>
+  <input type="number" id="producao">
+
+  <label>Palets produzidos</label>
+  <input type="number" id="palets">
+
+  <label>Fardos soltos</label>
+  <input type="number" id="fardos">
+
+  <label>Garrafas avulsas</label>
+  <input type="number" id="avulsas">
+
+  <label>Garrafas deixadas do turno anterior</label>
+  <input type="number" id="turnoAnterior">
+
+  <label>Perdas do turno</label>
+  <input type="number" id="perdas">
+
+  <button onclick="calcular()">Calcular</button>
+
+  <div class="resultado" id="resultado"></div>
+</div>
+
+<script>
+  function calcular() {
+    const producao = Number(document.getElementById("producao").value);
+    const palets = Number(document.getElementById("palets").value);
+    const fardos = Number(document.getElementById("fardos").value);
+    const avulsas = Number(document.getElementById("avulsas").value);
+    const turnoAnterior = Number(document.getElementById("turnoAnterior").value);
+    const perdas = Number(document.getElementById("perdas").value);
+
+    const garrafasPorFardo = 140;
+    const fardosPorPalet = 8;
+
+    const totalFardos = (palets * fardosPorPalet) + fardos;
+    const embaladas = (totalFardos * garrafasPorFardo) + avulsas;
+
+    const totalContabilizado = embaladas + perdas - turnoAnterior;
+    const diferenca = producao - totalContabilizado;
+
+    document.getElementById("resultado").innerHTML = `
+      Embaladas: ${embaladas} garrafas<br>
+      Perdas: ${perdas}<br>
+      (-) Turno anterior: ${turnoAnterior}<br>
+      <hr>
+      Total contabilizado: ${totalContabilizado}<br>
+      Diferença com a máquina: ${diferenca}
+    `;
+  }
+</script>
+
+</body>
+</html>
