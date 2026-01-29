@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Conferência de Produção - Turno</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+    .box {
+      background: white;
+      max-width: 420px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    h2 {
+      text-align: center;
+    }
+    label {
+      margin-top: 10px;
+      display: block;
+    }
+    input, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      background: #1976d2;
+      color: white;
+      border: none;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    .resultado {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Conferência de Produção</h2>
+
+  <label>Produção da máquina</label>
+  <input type="number" id="producao">
+
+  <label>Palets produzidos</label>
+  <input type="number" id="palets">
+
+  <label>Fardos soltos</label>
+  <input type="number" id="fardos">
+
+  <label>Perda de garrafas</label>
+  <input type="number" id="perda">
+
+  <button onclick="calcular()">Calcular</button>
+
+  <div class="resultado" id="resultado"></div>
+</div>
+
+<script>
+  function calcular() {
+    const producao = Number(document.getElementById("producao").value);
+    const palets = Number(document.getElementById("palets").value);
+    const fardos = Number(document.getElementById("fardos").value);
+    const perda = Number(document.getElementById("perda").value);
+
+    const garrafasPorFardo = 140;
+    const fardosPorPalet = 8;
+
+    const embaladas =
+      (palets * fardosPorPalet * garrafasPorFardo) +
+      (fardos * garrafasPorFardo);
+
+    const totalContado = embaladas + perda;
+    const diferenca = producao - totalContado;
+
+    document.getElementById("resultado").innerHTML = `
+      Embaladas: ${embaladas} garrafas<br>
+      Perdas: ${perda}<br>
+      Total contado: ${totalContado}<br>
+      Diferença: ${diferenca}
+    `;
+  }
+</script>
+
+</body>
+</html>
