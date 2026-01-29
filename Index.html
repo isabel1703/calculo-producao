@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Controle de Produção por Turno</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+  padding: 20px;
+}
+.box {
+  background: white;
+  padding: 20px;
+  max-width: 500px;
+  margin: auto;
+  border-radius: 8px;
+}
+input, select, button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 8px;
+}
+button {
+  background: #1976d2;
+  color: white;
+  border: none;
+  margin-top: 15px;
+  cursor: pointer;
+}
+.resultado {
+  margin-top: 15px;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+<h2>Controle de Produção - Turno</h2>
+
+<label>Tipo de Garrafa</label>
+<select id="produto" onchange="atualizarParametros()">
+  <option value="">Selecione</option>
+  <option value="2L">2L</option>
+  <option value="200">200ml</option>
+  <option value="250">250ml</option>
+  <option value="350">350ml</option>
+  <option value="510">510ml</option>
+  <option value="600">600ml</option>
+  <option value="corote">Corote</option>
+</select>
+
+<label>Produção da máquina</label>
+<input type="number" id="producao">
+
+<label>Palets produzidos</label>
+<input type="number" id="palets">
+
+<label>Fardos soltos</label>
+<input type="number" id="fardos">
+
+<label>Garrafas avulsas</label>
+<input type="number" id="avulsas">
+
+<label>Sobras do turno anterior</label>
+<input type="number" id="sobras">
+
+<label>Garrafas usadas do estoque</label>
+<input type="number" id="estoque">
+
+<label>Perda de garrafas</label>
+<input type="number" id="perda">
+
+<button onclick="calcular()">Calcular</button>
+
+<div class="resultado" id="resultado"></div>
+</div>
+
+<script>
+let config = {};
+
+function atualizarParametros() {
+  let tipo = document.getElementById("produto").value;
+
+  if (tipo === "2L") config = { fardo: 140, palet: 8 };
+  if (tipo === "200") config = { fardo: 140, palet: 14 };
+  if (tipo === "250") config = { fardo: 406, palet: 12 };
+  if (tipo === "350") config = { fardo: 325, palet: 12 };
+  if (tipo === "510") config = { fardo: 325, palet: 12 };
+  if (tipo === "600") config = { fardo: 253, palet: 11 };
+  if (tipo === "corote") config = { fardo: 171, palet: 19 };
+}
+
+function calcular() {
+  let producao = Number(document.getElementById("producao").value);
+  let palets = Number(document.getElementById("palets").value);
+  let fardos = Number(document.getElementById("fardos").value);
+  let avulsas = Number(document.getElementById("avulsas").value);
+  let sobras = Number(document.getElementById("sobras").value);
+  let estoque = Number(document.getElementById("estoque").value);
+  let perda = Number(document.getElementById("perda").value);
+
+  let embalado =
+    (palets * config.palet * config.fardo) +
+    (fardos * config.fardo) +
+    avulsas +
+    sobras -
+    estoque -
+    perda;
+
+  let diferenca = producao - embalado;
+
+  document.getElementById("resultado").innerHTML = `
+    Total embalado: ${embalado}<br>
+    Diferença com a máquina: ${diferenca}
+  `;
+}
+</script>
+
+</body>
+</html>
