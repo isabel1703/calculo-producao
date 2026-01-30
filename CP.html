@@ -1,0 +1,115 @@
+<!DOCTYPE html><html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Controle de Produção</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3e9f7;
+      padding: 20px;
+    }
+    h1 {
+      color: #6a1b9a;
+    }
+    .container {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      color: #4a148c;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      background: #8e24aa;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #6a1b9a;
+    }
+    .resultado {
+      margin-top: 20px;
+      padding: 15px;
+      background: #ede7f6;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Controle de Produção por Turno</h1><label>ML da garrafa</label>
+<select id="ml">
+  <option value="200">200 ml</option>
+  <option value="250">250 ml</option>
+  <option value="350">350 ml</option>
+  <option value="510">510 ml</option>
+  <option value="600">600 ml</option>
+  <option value="1000">1 L</option>
+  <option value="2000">2 L</option>
+  <option value="corote">Corote</option>
+  <option value="5l">5 L</option>
+  <option value="2lcp">2 L CP</option>
+</select>
+
+<label>Produção da máquina</label>
+<input type="number" id="producao" />
+
+<label>Palets</label>
+<input type="number" id="palets" />
+
+<label>Fardos avulsos</label>
+<input type="number" id="fardos" />
+
+<label>Garrafas avulsas</label>
+<input type="number" id="avulsas" />
+
+<label>Garrafas do estoque</label>
+<input type="number" id="estoque" />
+
+<label>Garrafas do turno anterior</label>
+<input type="number" id="turno" />
+
+<label>Perda de garrafas</label>
+<input type="number" id="perda" />
+
+<button onclick="calcular()">Calcular</button>
+
+<div class="resultado" id="resultado"></div>
+
+  </div>  <script>
+    const config = {
+      200: { fardo: 140, palet: 14 },
+      250: { fardo: 406, palet: 12 },
+      350: { fardo: 325, palet: 12 },
+      510: { fardo: 325, palet: 12 },
+      600: { fardo: 253, palet: 11 },
+      2000: { fardo: 140, palet: 8 },
+      corote: { fardo: 171, palet: 19 },
+      '5l': { fardo: 49, palet: 8 },
+      '2lcp': { fardo: 120, palet: 9 }
+    };
+
+    function calcular() {
+      const ml = document.getElementById('ml').value;
+      const prod = Number(document.getElementById('producao').value);
+      const palets = Number(document.getElementById('pal
