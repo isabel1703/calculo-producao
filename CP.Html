@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Conferência de Produção</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #6a1b9a, #8e24aa);
+  padding: 20px;
+}
+
+.container {
+  background: #fff;
+  max-width: 520px;
+  margin: auto;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+h2 {
+  text-align: center;
+  color: #6a1b9a;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+}
+
+button {
+  background: #6a1b9a;
+  color: white;
+  border: none;
+  margin-top: 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.resultado {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.ok { background: #e8f5e9; color: #2e7d32; }
+.faltou { background: #fff8e1; color: #f57c00; }
+.passou { background: #fdecea; color: #c62828; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>Conferência de Produção – Turno</h2>
+
+<label>Ml da garrafa</label>
+<select id="ml">
+  <option value="">Selecione</option>
+  <option value="200">200ml</option>
+  <option value="250">250ml</option>
+  <option value="350">350ml</option>
+  <option value="510">510ml</option>
+  <option value="600">600ml</option>
+  <option value="1L">1L</option>
+  <option value="2L">2L</option>
+  <option value="2LCP">2L CP</option>
+  <option value="5L">5L</option>
+  <option value="corote">Corote</option>
+</select>
+
+<label>Produção</label>
+<input type="number" id="producao">
+
+<label>Palets produzidos</label>
+<input type="number" id="palets">
+
+<label>Fardos avulsos</label>
+<input type="number" id="fardos">
+
+<label>Garrafas avulsas</label>
+<input type="number" id="avulsas">
+
+<label>Garrafas do Turno anterior</label>
+<input type="number" id="turnoAnterior">
+
+<label>Garrafas do Estoque</label>
+<input type="number" id="estoque">
+
+<label>Perda de garrafas</label>
+<input type="number" id="perda">
+
+<button onclick="calcular()">Calcular</button>
+
+<div id="resultado" class="resultado"></div>
+</div>
+
+<script>
+function dadosProduto(ml) {
+  const tabela = {
+    "200": { fardo: 140, palet: 14 },
+    "250": { fardo: 406, palet: 12 },
+    "350": { fardo: 325, palet: 12 },
+    "510": { fardo: 325, palet: 12 },
+    "600": { fardo: 253, palet: 11 },
+    "2L": { fardo: 140, palet: 8 },
+    "corote": { fardo: 171, palet: 19 },
+    "5L": { fardo: 49, palet: 8 },
+    "2LCP": { fardo: 120, palet: 9 }
+  };
+  return tabela[ml];
+}
+
+function calcular() {
+  const ml = document.getElementById("ml").value;
+  const producao = Number(document.getElementById("producao").value);
+  const palets = Number(document.getElementById("palets").value);
+  const fardos = Number(document.getElementById("fardos").value);
+  const avulsas = Number(document.getElementById("avulsas").value);
+  const turnoAnterior = Number(document.getElementById("turnoAnterior").value);
+  const estoque = Number(document.getElementById("estoque").value);
+  const perda = Number(document.getElementById("perda").value);
+
+  const config = dadosProduto(ml);
+
+  if (!config) {
+    alert("Selecione o ml da garrafa");
+    return;
+  }
+
+  const totalEmbalado =
+    (palets * config.palet * config.fardo) +
+    (fardos * config.fardo) +
+    avulsas +
+    turnoAnterior -
+    estoque -
+    perda;
+
+  const diferenca = totalEmbalado - producao;
+  const resultado = document.getElementById("resultado");
+
+  if (diferenca === 0) {
+    resultado.className = "resultado ok";
+    resultado.innerHTML = `
+      ✔️ BATEU COM A PRODUÇÃO<br>
+      Total embalado: ${totalEmbalado}
+    `;
+  } else if (diferenca > 0) {
+    resultado.className = "resultado passou";
+    resultado.innerHTML = `
+      ❌ PASSOU DA PRODUÇÃO<br>
+      Diferença: ${diferenca} garrafas
+    `;
+  } else {
+    resultado.className = "resultado faltou";
+    resultado.innerHTML = `
+      ⚠️ FALTOU PRODUÇÃO<br>
+      Diferença: ${Math.abs(diferenca)} garrafas
+    `;
+  }
+}
+</script>
+
+</body>
+</html>
